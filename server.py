@@ -20,6 +20,7 @@ from db_operations import initialize_database
 from js8call_integration import JS8CallClient
 from message_processing import on_receive
 from pubsub import pub
+from config_banner import display_banner
 
 # General logging
 logging.basicConfig(
@@ -37,20 +38,8 @@ js8call_formatter = logging.Formatter('%(asctime)s - JS8Call - %(levelname)s - %
 js8call_handler.setFormatter(js8call_formatter)
 js8call_logger.addHandler(js8call_handler)
 
-def display_banner():
-    banner = """
-████████╗ ██████╗██████╗       ██████╗ ██████╗ ███████╗
-╚══██╔══╝██╔════╝╚════██╗      ██╔══██╗██╔══██╗██╔════╝
-   ██║   ██║      █████╔╝█████╗██████╔╝██████╔╝███████╗
-   ██║   ██║     ██╔═══╝ ╚════╝██╔══██╗██╔══██╗╚════██║
-   ██║   ╚██████╗███████╗      ██████╔╝██████╔╝███████║
-   ╚═╝    ╚═════╝╚══════╝      ╚═════╝ ╚═════╝ ╚══════╝
-Meshtastic Version
-"""
-    print(banner)
 
 def main():
-    display_banner()
     args = init_cli_parser()
     config_file = None
     if args.config is not None:
@@ -59,11 +48,13 @@ def main():
 
     merge_config(system_config, args)
 
+    display_banner(system_config['service_name'])
+
     interface = get_interface(system_config)
     interface.bbs_nodes = system_config['bbs_nodes']
     interface.allowed_nodes = system_config['allowed_nodes']
 
-    logging.info(f"TC²-BBS is running on {system_config['interface_type']} interface...")
+    logging.info(f"{system_config['service_name']} is running on {system_config['interface_type']} interface...")
 
     initialize_database()
 
