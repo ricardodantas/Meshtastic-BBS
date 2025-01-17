@@ -1,11 +1,15 @@
+"""
+Config utilities.
+"""
+import argparse
 import configparser
 import time
 from typing import Any
-import meshtastic.stream_interface
-import meshtastic.serial_interface
-import meshtastic.tcp_interface
-import serial.tools.list_ports
-import argparse
+
+import meshtastic.serial_interface  # type: ignore
+import meshtastic.stream_interface  # type: ignore
+import meshtastic.tcp_interface  # type: ignore
+import serial.tools.list_ports  # type: ignore
 
 
 def init_cli_parser() -> argparse.Namespace:
