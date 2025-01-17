@@ -43,4 +43,16 @@ else
     echo "config.ini already exists."
 fi
 
+# Detect the current user
+CURRENT_USER=$(whoami)
+echo "Current user: $CURRENT_USER"
+
+# Update meshtastic-bbs.service with the current user
+SERVICE_FILE="meshtastic-bbs.service"
+if [ -f "$SERVICE_FILE" ]; then
+    sed -i "s/User=pi/User=$CURRENT_USER/g" $SERVICE_FILE
+    sed -i "s|/home/pi|/home/$CURRENT_USER|g" $SERVICE_FILE
+    echo "Updated $SERVICE_FILE with the current user."
+fi
+
 echo "Setup completed successfully!"
