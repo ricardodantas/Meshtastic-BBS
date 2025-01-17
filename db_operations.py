@@ -113,6 +113,21 @@ def get_channels():
 
 
 def add_bulletin(board, sender_short_name, subject, content, bbs_nodes, interface, unique_id=None):
+    """
+    Adds a bulletin to the database and optionally sends it to BBS nodes and group chat if urgent.
+
+    Args:
+        board (str): The name of the bulletin board.
+        sender_short_name (str): The short name of the sender.
+        subject (str): The subject of the bulletin.
+        content (str): The content of the bulletin.
+        bbs_nodes (list): List of BBS nodes to send the bulletin to.
+        interface (object): The interface used to send the bulletin.
+        unique_id (str, optional): A unique identifier for the bulletin. Defaults to None.
+
+    Returns:
+        str: The unique identifier of the added bulletin.
+    """
     conn = get_db_connection()
     c = conn.cursor()
     date = datetime.now().strftime('%Y-%m-%d %H:%M')
