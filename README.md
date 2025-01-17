@@ -106,7 +106,7 @@ If you're a Docker user, the Meshtastic BBS is available on Docker Hub!
 Run the server with:
 
 ```sh
-python server.py
+./scripts/start.sh
 ```
 
 Be sure you've followed the Python virtual environment steps above and activated it before running.
