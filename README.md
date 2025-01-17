@@ -4,6 +4,15 @@
 
 This is a fork from the [TC²-BBS](https://github.com/TheCommsChannel/Meshtastic-BBS) project with with some modern Python improvements and additional features. The system allows for message handling, bulletin boards, mail systems, and a channel directory.
 
+## Table of Contents
+
+- [Automatic setup (recommended)](#automatic-setup-recommended)
+- [Configuration](#configuration)
+- [Manual setup](#manual-setup)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Automatic setup (recommended)
 
 1. Run the following command in you terminal:
@@ -261,11 +270,10 @@ The following device roles have been working:
 ## Usage
 
 You interact with the BBS by sending direct messages to the node that's connected to the system running the Python script. Sending any message to it will get a response with the main menu.
+
 Make selections by sending messages based on the letter or number in brackets - Send M for [M]ail Menu for example.
 
-A video of it in use is available on our YouTube channel:
-
-[![TC²-BBS-Mesh](https://img.youtube.com/vi/d6LhY4HoimU/0.jpg)](https://www.youtube.com/watch?v=d6LhY4HoimU)
+A video of it in use is available on [The Comms Channel](https://www.youtube.com/watch?v=d6LhY4HoimU).
 
 ## Sponsor
 
