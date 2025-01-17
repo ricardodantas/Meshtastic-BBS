@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Clone the repository
-git clone git@github.com:ricardodantas/Meshtastic-BBS.git
+# git clone git@github.com:ricardodantas/meshtastic-bb.git
 
 # Check if pyenv is already installed
 if command -v pyenv >/dev/null 2>&1; then
@@ -50,8 +50,13 @@ echo "Current user: $CURRENT_USER"
 # Update meshtastic-bbs.service with the current user
 SERVICE_FILE="meshtastic-bbs.service"
 if [ -f "$SERVICE_FILE" ]; then
-    sed -i "s/User=pi/User=$CURRENT_USER/g" $SERVICE_FILE
-    sed -i "s|/home/pi|/home/$CURRENT_USER|g" $SERVICE_FILE
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s/User=pi/User=$CURRENT_USER/g" $SERVICE_FILE
+        sed -i '' "s|/home/pi|/home/$CURRENT_USER|g" $SERVICE_FILE
+    else
+        sed -i "s/User=pi/User=$CURRENT_USER/g" $SERVICE_FILE
+        sed -i "s|/home/pi|/home/$CURRENT_USER|g" $SERVICE_FILE
+    fi
     echo "Updated $SERVICE_FILE with the current user."
 fi
 
