@@ -13,10 +13,14 @@ else
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         echo "Detected Linux OS. Installing pyenv..."
         curl -fsSL https://pyenv.run | bash
+        pyenv install 3.12
+        pyenv local 3.12
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         echo "Detected macOS. Installing pyenv..."
         brew update
         brew install pyenv
+        pyenv install 3.12
+        pyenv local 3.12
     else
         echo "Unsupported OS: $OSTYPE"
         exit 1

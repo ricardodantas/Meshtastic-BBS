@@ -10,7 +10,15 @@ If you're a Docker user, the Meshtastic BBS is available on Docker Hub!
 
 [![Docker HUB](https://icon-icons.com/downloadimage.php?id=151885&root=2530/PNG/128/&file=docker_button_icon_151885.png)](https://hub.docker.com/r/ricardodantas/meshtastic-bbs)
 
-## Setup
+## Automatic setup (recommended)
+
+Run the following command in you terminal:
+
+ ```bash
+curl -fsSL https://raw.githubusercontent.com/ricardodantas/Meshtastic-BBS/development/scripts/setup.sh | bash
+```
+
+## Manual Setup
 
 ### Requirements
 
