@@ -50,6 +50,10 @@ def main():
 
     display_banner(system_config['service_name'])
 
+    logging.info(f"Configured to sync with the following BBS nodes: {system_config['bbs_nodes']}")
+
+    logging.info(f"Nodes with Urgent board permissions: {system_config['allowed_nodes']}")
+
     interface = get_interface(system_config)
     interface.bbs_nodes = system_config['bbs_nodes']
     interface.allowed_nodes = system_config['allowed_nodes']
