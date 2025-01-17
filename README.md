@@ -281,11 +281,16 @@ Make selections by sending messages based on the letter or number in brackets - 
 
 A video of it in use is available on [The Comms Channel](https://www.youtube.com/watch?v=d6LhY4HoimU).
 
-## Contributing
 
 ## Sponsor
 
 Help to maintain this project and become a sponsor on [Github Sponsors](https://github.com/sponsors/ricardodantas), [Ko-fi](https://ko-fi.com/ricardodantas), or [Buy Me A Coffee](https://www.buymeacoffee.com/ricardodantas)!
+
+
+## Contributing
+
+See [CONTRIBUTING](CONTRIBUTING.md).
+
 
 ## Thanks
 
