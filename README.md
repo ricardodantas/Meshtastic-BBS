@@ -6,11 +6,51 @@ This is a fork from the [TC²-BBS](https://github.com/TheCommsChannel/Meshtastic
 
 ## Automatic setup (recommended)
 
-Run the following command in you terminal:
+1. Run the following command in you terminal:
 
  ```bash
 curl -fsSL https://raw.githubusercontent.com/ricardodantas/Meshtastic-BBS/development/scripts/setup.sh | bash
 ```
+
+2. Set up the configuration in `config.ini`:
+
+   You'll need to open up the config.ini file in a text editor and make your changes following the instructions below
+
+   **[service]**
+
+   `name="Meshtastic BBS"` if you want to change the name of the service
+
+   **[interface]**
+   If using `type = serial` and you have multiple devices connected, you will need to uncomment the `port =` line and enter the port of your device.
+
+   Linux Example:
+   `port = /dev/ttyUSB0`
+
+   Windows Example:
+   `port = COM3`
+
+   If using type = tcp you will need to uncomment the hostname = 192.168.x.x line and put in the IP address of your Meshtastic device.
+
+   **[sync]**
+   Enter a list of other BBS nodes you would like to sync messages and bulletins with. Separate each by comma and no spaces as shown in the example below.
+   You can find the nodeID in the menu under `Radio Configuration > User` for each node, or use this script for getting nodedb data from a device:
+
+   [Meshtastic-Python-Examples/print-nodedb.py at main · pdxlocations/Meshtastic-Python-Examples (github.com)](https://github.com/pdxlocations/Meshtastic-Python-Examples/blob/main/print-nodedb.py)
+
+   Example Config:
+
+   ```ini
+   [service]
+   name = "My BBS"
+
+   [interface]
+   type = serial
+   # port = /dev/ttyUSB0
+   # hostname = 192.168.x.x
+
+   [sync]
+   bbs_nodes = !f53f4abc,!f3abc123
+   ```
 
 ## Manual Setup
 
@@ -134,7 +174,7 @@ options:
                         MQTT topic to subscribe
 ```
 
-## Automatically run at boot
+### Automatically run at boot
 
 If you would like to have the script automatically run at boot, follow the steps below:
 
