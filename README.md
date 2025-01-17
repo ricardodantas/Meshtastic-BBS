@@ -1,6 +1,6 @@
 # Meshtastic BBS
 
-> Working in progress
+[![CodeQL](https://github.com/ricardodantas/Meshtastic-BBS/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/ricardodantas/Meshtastic-BBS/actions/workflows/github-code-scanning/codeql)
 
 This is a fork from the [TC²-BBS](https://github.com/TheCommsChannel/Meshtastic-BBS) project with with some modern Python improvements and additional features. The system allows for message handling, bulletin boards, mail systems, and a channel directory.
 
