@@ -24,7 +24,7 @@ config.read('config.ini')
 main_menu_items = config['menu']['main_menu_items'].split(',')
 bbs_menu_items = config['menu']['bbs_menu_items'].split(',')
 utilities_menu_items = config['menu']['utilities_menu_items'].split(',')
-
+service_name = config['service']['name']
 
 def build_menu(items, menu_name):
     menu_str = f"{menu_name}\n"
@@ -56,13 +56,13 @@ def handle_help_command(sender_id, interface, menu_name=None):
     if menu_name:
         update_user_state(sender_id, {'command': 'MENU', 'menu': menu_name, 'step': 1})
         if menu_name == 'bbs':
-            response = build_menu(bbs_menu_items, "📰BBS Menu📰")
+            response = build_menu(bbs_menu_items, "Menu")
         elif menu_name == 'utilities':
-            response = build_menu(utilities_menu_items, "🛠️Utilities Menu🛠️")
+            response = build_menu(utilities_menu_items, "Utilities Menu")
     else:
         update_user_state(sender_id, {'command': 'MAIN_MENU', 'step': 1})  # Reset to main menu state
         mail = get_mail(get_node_id_from_num(sender_id, interface))
-        response = build_menu(main_menu_items, f"💾TC² BBS💾 (✉️:{len(mail)})")
+        response = build_menu(main_menu_items, f"{service_name} (✉️:{len(mail)})")
     send_message(response, sender_id, interface)
 
 def get_node_name(node_id, interface):
@@ -73,14 +73,14 @@ def get_node_name(node_id, interface):
 
 
 def handle_mail_command(sender_id, interface):
-    response = "✉️Mail Menu✉️\nWhat would you like to do with mail?\n[R]ead  [S]end E[X]IT"
+    response = "Mail Menu\nWhat would you like to do with mail?\n[R]ead  [S]end E[X]IT"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'MAIL', 'step': 1})
 
 
 
 def handle_bulletin_command(sender_id, interface):
-    response = f"📰Bulletin Menu📰\nWhich board would you like to enter?\n[G]eneral  [I]nfo  [N]ews  [U]rgent"
+    response = f"Bulletin Menu\nWhich board would you like to enter?\n[G]eneral  [I]nfo  [N]ews  [U]rgent"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'BULLETIN_MENU', 'step': 1})
 
@@ -91,7 +91,7 @@ def handle_exit_command(sender_id, interface):
 
 
 def handle_stats_command(sender_id, interface):
-    response = "📊Stats Menu📊\nWhat stats would you like to view?\n[N]odes  [H]ardware  [R]oles  E[X]IT"
+    response = "Stats Menu\nWhat stats would you like to view?\n[N]odes  [H]ardware  [R]oles  E[X]IT"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'STATS', 'step': 1})
 
@@ -104,7 +104,7 @@ def handle_fortune_command(sender_id, interface):
             send_message("No fortunes available.", sender_id, interface)
             return
         fortune = random.choice(fortunes).strip()
-        decorated_fortune = f"🔮 {fortune} 🔮"
+        decorated_fortune = f"{fortune}"
         send_message(decorated_fortune, sender_id, interface)
     except Exception as e:
         send_message(f"Error generating fortune: {e}", sender_id, interface)
@@ -220,7 +220,7 @@ def handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes):
                 return
             sender_short_name = node_info['user'].get('shortName', f"Node {sender_id}")
             unique_id = add_bulletin(board, sender_short_name, subject, content, bbs_nodes, interface)
-            send_message(f"Your bulletin '{subject}' has been posted to {board}.\n(╯°□°)╯📄📌[{board}]", sender_id, interface)
+            send_message(f"Your bulletin '{subject}' has been posted to {board}.\n(╯°□°)╯[{board}]", sender_id, interface)
             handle_bb_steps(sender_id, 'e', 1, state, interface, bbs_nodes)
         else:
             state['content'] += message + "\n"
@@ -244,7 +244,7 @@ def handle_mail_steps(sender_id, message, step, state, interface, bbs_nodes):
                     send_message(f"-{msg[0]}-\nDate: {msg[3]}\nFrom: {msg[1]}\nSubject: {msg[2]}", sender_id, interface)
                 update_user_state(sender_id, {'command': 'MAIL', 'step': 2})
             else:
-                send_message("There are no messages in your mailbox.📭", sender_id, interface)
+                send_message("There are no messages in your mailbox.", sender_id, interface)
                 update_user_state(sender_id, None)
         elif choice == 's':
             send_message("What is the Short Name of the node you want to leave a message for?", sender_id, interface)
@@ -322,7 +322,7 @@ def handle_mail_steps(sender_id, message, step, state, interface, bbs_nodes):
 
             sender_short_name = get_node_short_name(get_node_id_from_num(sender_id, interface), interface)
             unique_id = add_mail(get_node_id_from_num(sender_id, interface), sender_short_name, recipient_id, subject, content, bbs_nodes, interface)
-            send_message(f"Mail has been posted to the mailbox of {recipient_name}.\n(╯°□°)╯📨📬", sender_id, interface)
+            send_message(f"Mail has been posted to the mailbox of {recipient_name}.\n(╯°□°)╯", sender_id, interface)
 
             notification_message = f"You have a new mail message from {sender_short_name}. Check your mailbox by responding to this message with CM."
             send_message(notification_message, recipient_id, interface)
@@ -355,7 +355,7 @@ def handle_wall_of_shame_command(sender_id, interface):
 
 
 def handle_channel_directory_command(sender_id, interface):
-    response = "📚CHANNEL DIRECTORY📚\nWhat would you like to do?\n[V]iew  [P]ost  E[X]IT"
+    response = "CHANNEL DIRECTORY\nWhat would you like to do?\n[V]iew  [P]ost  E[X]IT"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'CHANNEL_DIRECTORY', 'step': 1})
 
@@ -446,7 +446,7 @@ def handle_check_mail_command(sender_id, interface):
             send_message("You have no new messages.", sender_id, interface)
             return
 
-        response = "📬 You have the following messages:\n"
+        response = "You have the following messages:\n"
         for i, msg in enumerate(mail):
             response += f"{i + 1:02d}. From: {msg[1]}, Subject: {msg[2]}\n"
         response += "\nPlease reply with the number of the message you want to read."
@@ -493,7 +493,7 @@ def handle_delete_mail_confirmation(sender_id, message, state, interface, bbs_no
             unique_id = state['unique_id']
             sender_node_id = get_node_id_from_num(sender_id, interface)
             delete_mail(unique_id, sender_node_id, bbs_nodes, interface)
-            send_message("The message has been deleted 🗑️", sender_id, interface)
+            send_message("The message has been deleted", sender_id, interface)
             update_user_state(sender_id, None)
         elif choice == 'r':
             sender = state['sender']
@@ -523,7 +523,7 @@ def handle_post_bulletin_command(sender_id, message, interface, bbs_nodes):
         send_message(f"Your bulletin '{subject}' has been posted to {board_name}.", sender_id, interface)
 
         if board_name.lower() == "urgent":
-            notification_message = f"💥NEW URGENT BULLETIN💥\nFrom: {sender_short_name}\nTitle: {subject}"
+            notification_message = f"💥NEW URGENT BULLETIN\nFrom: {sender_short_name}\nTitle: {subject}"
             send_message(notification_message, BROADCAST_NUM, interface)
 
     except Exception as e:
@@ -548,7 +548,7 @@ def handle_check_bulletin_command(sender_id, message, interface):
             send_message(f"No bulletins available on {board_name} board.", sender_id, interface)
             return
 
-        response = f"📰 Bulletins on {board_name} board:\n"
+        response = f"Bulletins on {board_name} board:\n"
         for i, bulletin in enumerate(bulletins):
             response += f"[{i+1:02d}] Subject: {bulletin[1]}, From: {bulletin[2]}, Date: {bulletin[3]}\n"
         response += "\nPlease reply with the number of the bulletin you want to read."
@@ -663,6 +663,6 @@ def handle_list_channels_command(sender_id, interface):
 
 
 def handle_quick_help_command(sender_id, interface):
-    response = ("✈️QUICK COMMANDS✈️\nSend command below for usage info:\nSM,, - Send "
+    response = ("QUICK COMMANDS\nSend command below for usage info:\nSM,, - Send "
                 "Mail\nCM - Check Mail\nPB,, - Post Bulletin\nCB,, - Check Bulletins\n")
     send_message(response, sender_id, interface)
