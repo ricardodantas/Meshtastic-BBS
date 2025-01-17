@@ -27,4 +27,4 @@ jobs:
 
     - name: Lint
       run: |
-        pylint --rcfile .pylintrc $(git ls-files '*.py')
+        poetry run pylint --rcfile .pylintrc $(git ls-files '*.py')
