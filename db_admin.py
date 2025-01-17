@@ -1,6 +1,7 @@
-import os
 import sqlite3
 import threading
+from .utils import clear_screen, print_bold, print_separator
+from .config_banner import display_banner
 
 thread_local = threading.local()
 
@@ -37,6 +38,7 @@ def initialize_database():
                     url TEXT NOT NULL
                 );''')
     conn.commit()
+    conn.close()
 
 def list_bulletins():
     conn = get_db_connection()
@@ -138,33 +140,11 @@ def display_menu():
     print("6. Delete Channels")
     print("7. Exit")
 
-def display_banner():
-    banner = """
-████████╗ ██████╗██████╗       ██████╗ ██████╗ ███████╗
-╚══██╔══╝██╔════╝╚════██╗      ██╔══██╗██╔══██╗██╔════╝
-   ██║   ██║      █████╔╝█████╗██████╔╝██████╔╝███████╗
-   ██║   ██║     ██╔═══╝ ╚════╝██╔══██╗██╔══██╗╚════██║
-   ██║   ╚██████╗███████╗      ██████╔╝██████╔╝███████║
-   ╚═╝    ╚═════╝╚══════╝      ╚═════╝ ╚═════╝ ╚══════╝
-Database Administrator
-"""
-    print_bold(banner)
-    print_separator()
-
-def clear_screen():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
 def input_bold(prompt):
     print("\033[1m")  # ANSI escape code for bold text
     response = input(prompt)
     print("\033[0m")  # ANSI escape code to reset text
     return response
-
-def print_bold(message):
-    print("\033[1m" + message + "\033[0m")  # Bold text
-
-def print_separator():
-    print_bold("========================")
 
 def main():
     display_banner()
