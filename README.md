@@ -138,7 +138,7 @@ If you would like to have the script automatically run at boot, follow the steps
 
 1. **Edit the service file**
 
-   First, edit the mesh-bbs.service file using your preferred text editor. The 3 following lines in that file are what we need to edit:
+   First, edit the `meshtastic-bbs.service` file using your preferred text editor. The 3 following lines in that file are what we need to edit:
 
    ```sh
    User=pi
