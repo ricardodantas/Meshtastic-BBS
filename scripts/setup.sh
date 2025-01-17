@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Clone the repository
-# git clone git@github.com:ricardodantas/meshtastic-bb.git
+git clone git@github.com:ricardodantas/meshtastic-bbs.git
+
+cd meshtastic-bbs || exit
 
 # Check if pyenv is already installed
 if command -v pyenv >/dev/null 2>&1; then
@@ -58,6 +60,19 @@ if [ -f "$SERVICE_FILE" ]; then
         sed -i "s|/home/pi|/home/$CURRENT_USER|g" $SERVICE_FILE
     fi
     echo "Updated $SERVICE_FILE with the current user."
+
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        if command -v poetry >/dev/null 2>&1; then
+            echo "Enable service using systemctl..."
+            sudo cp meshtastic-bbs.service /etc/systemd/system/
+            sudo systemctl enable meshtastic-bbs.service
+
+            echo "Starting service..."
+            sudo systemctl enable meshtastic-bbs.service
+        fi
+    else
+        echo "Skipping the service  file setup on Mac OS"
+    fi
 fi
 
 echo "Setup completed successfully!"
