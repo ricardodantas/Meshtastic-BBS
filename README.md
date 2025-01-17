@@ -152,7 +152,7 @@ If you would like to have the script automatically run at boot, follow the steps
 
 2. **Configuring systemd**
 
-   From the Meshtastic-BBS directory, run the following commands:
+   From the `meshtastic-bbs` directory, run the following commands:
 
    ```sh
    sudo cp meshtastic-bbs.service /etc/systemd/system/
@@ -227,17 +227,9 @@ A video of it in use is available on our YouTube channel:
 
 ## Thanks
 
-**Meshtastic:**
+**TheCommsChannel:**
 
-Big thanks to [Meshtastic](https://github.com/meshtastic) and [pdxlocations](https://github.com/pdxlocations) for the great Python examples:
-
-[python/examples at master · meshtastic/python (github.com)](https://github.com/meshtastic/python/tree/master/examples)
-
-[pdxlocations/Meshtastic-Python-Examples (github.com)](https://github.com/pdxlocations/Meshtastic-Python-Examples)
-
-**JS8Call:**
-
-For the JS8Call side of things, big thanks to Jordan Sherer for JS8Call and the [example API Python script](https://bitbucket.org/widefido/js8call/src/js8call/tcp.py)
+Big thanks to [TheCommsChannel](https://github.com/TheCommsChannel) for making this service available! 🙏
 
 ## License
 
