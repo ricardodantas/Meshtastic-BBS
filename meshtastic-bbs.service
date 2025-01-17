@@ -1,0 +1,14 @@
+[Unit]
+Description=Meshtastic BBS service
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=20
+User=pi
+WorkingDirectory=/home/pi/meshtastic-bbs
+ExecStart=./scripts/start.sh
+
+[Install]
+WantedBy=multi-user.target
