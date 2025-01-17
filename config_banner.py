@@ -1,9 +1,11 @@
 """
 Print terminal banner utilities.
 """
-from pyfiglet import Figlet # type: ignore
 
-def display_banner(text:str) -> None:
+from pyfiglet import Figlet  # type: ignore
+
+
+def display_banner(text: str) -> None:
     """
     Displays a banner with the given text using the Figlet library.
 

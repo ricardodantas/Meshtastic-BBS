@@ -1,6 +1,7 @@
 """
 Database administration utilities.
 """
+
 import sqlite3
 import threading
 from utils import clear_screen, print_bold, print_separator
@@ -10,6 +11,7 @@ from config_init import initialize_config
 config = initialize_config()
 
 thread_local = threading.local()
+
 
 def get_db_connection():
     """
@@ -23,9 +25,10 @@ def get_db_connection():
     Returns:
         sqlite3.Connection: A SQLite database connection object.
     """
-    if not hasattr(thread_local, 'connection'):
-        thread_local.connection = sqlite3.connect('bulletins.db')
+    if not hasattr(thread_local, "connection"):
+        thread_local.connection = sqlite3.connect("bulletins.db")
     return thread_local.connection
+
 
 def initialize_database():
     """
@@ -40,7 +43,8 @@ def initialize_database():
     """
     conn = get_db_connection()
     c = conn.cursor()
-    c.execute('''CREATE TABLE IF NOT EXISTS bulletins (
+    c.execute(
+        """CREATE TABLE IF NOT EXISTS bulletins (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     board TEXT NOT NULL,
                     sender_short_name TEXT NOT NULL,
@@ -48,8 +52,10 @@ def initialize_database():
                     subject TEXT NOT NULL,
                     content TEXT NOT NULL,
                     unique_id TEXT NOT NULL
-                )''')
-    c.execute('''CREATE TABLE IF NOT EXISTS mail (
+                )"""
+    )
+    c.execute(
+        """CREATE TABLE IF NOT EXISTS mail (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     sender TEXT NOT NULL,
                     sender_short_name TEXT NOT NULL,
@@ -58,14 +64,18 @@ def initialize_database():
                     subject TEXT NOT NULL,
                     content TEXT NOT NULL,
                     unique_id TEXT NOT NULL
-                );''')
-    c.execute('''CREATE TABLE IF NOT EXISTS channels (
+                );"""
+    )
+    c.execute(
+        """CREATE TABLE IF NOT EXISTS channels (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
                     url TEXT NOT NULL
-                );''')
+                );"""
+    )
     conn.commit()
     conn.close()
+
 
 def list_bulletins():
     """
@@ -81,16 +91,21 @@ def list_bulletins():
     """
     conn = get_db_connection()
     c = conn.cursor()
-    c.execute("SELECT id, board, sender_short_name, date, subject, unique_id FROM bulletins")
+    c.execute(
+        "SELECT id, board, sender_short_name, date, subject, unique_id FROM bulletins"
+    )
     bulletins = c.fetchall()
     if bulletins:
         print_bold("Bulletins:")
         for bulletin in bulletins:
-            print_bold(f"(ID: {bulletin[0]}, Board: {bulletin[1]}, Poster: {bulletin[2]}, Subject: {bulletin[4]})")
+            print_bold(
+                f"(ID: {bulletin[0]}, Board: {bulletin[1]}, Poster: {bulletin[2]}, Subject: {bulletin[4]})"
+            )
     else:
         print_bold("No bulletins found.")
     print_separator()
     return bulletins
+
 
 def list_mail():
     """
@@ -113,16 +128,21 @@ def list_mail():
     """
     conn = get_db_connection()
     c = conn.cursor()
-    c.execute("SELECT id, sender, sender_short_name, recipient, date, subject, unique_id FROM mail")
+    c.execute(
+        "SELECT id, sender, sender_short_name, recipient, date, subject, unique_id FROM mail"
+    )
     mail = c.fetchall()
     if mail:
         print_bold("Mail:")
         for mail in mail:
-            print_bold(f"(ID: {mail[0]}, Sender: {mail[2]}, Recipient: {mail[3]}, Subject: {mail[5]})")
+            print_bold(
+                f"(ID: {mail[0]}, Sender: {mail[2]}, Recipient: {mail[3]}, Subject: {mail[5]})"
+            )
     else:
         print_bold("No mail found.")
     print_separator()
     return mail
+
 
 def list_channels():
     """
@@ -150,6 +170,7 @@ def list_channels():
     print_separator()
     return channels
 
+
 def delete_bulletin():
     """
     Deletes bulletins from the database based on user input.
@@ -163,8 +184,10 @@ def delete_bulletin():
     """
     bulletins = list_bulletins()
     if bulletins:
-        bulletin_ids = input_bold("Enter the bulletin ID(s) to delete (comma-separated) or 'X' to cancel: ").split(',')
-        if 'X' in [id.strip().upper() for id in bulletin_ids]:
+        bulletin_ids = input_bold(
+            "Enter the bulletin ID(s) to delete (comma-separated) or 'X' to cancel: "
+        ).split(",")
+        if "X" in [id.strip().upper() for id in bulletin_ids]:
             print_bold("Deletion cancelled.")
             print_separator()
             return
@@ -173,8 +196,9 @@ def delete_bulletin():
         for bulletin_id in bulletin_ids:
             c.execute("DELETE FROM bulletins WHERE id = ?", (bulletin_id.strip(),))
         conn.commit()
-        print_bold(f"Bulletin(s) with ID(s) {', '.join(bulletin_ids)} deleted.")
+        print_bold(f"Bulletin(s) with ID(s) {", ".join(bulletin_ids)} deleted.")
         print_separator()
+
 
 def delete_mail():
     """
@@ -197,8 +221,10 @@ def delete_mail():
     """
     mail = list_mail()
     if mail:
-        mail_ids = input_bold("Enter the mail ID(s) to delete (comma-separated) or 'X' to cancel: ").split(',')
-        if 'X' in [id.strip().upper() for id in mail_ids]:
+        mail_ids = input_bold(
+            "Enter the mail ID(s) to delete (comma-separated) or 'X' to cancel: "
+        ).split(",")
+        if "X" in [id.strip().upper() for id in mail_ids]:
             print_bold("Deletion cancelled.")
             print_separator()
             return
@@ -207,8 +233,9 @@ def delete_mail():
         for mail_id in mail_ids:
             c.execute("DELETE FROM mail WHERE id = ?", (mail_id.strip(),))
         conn.commit()
-        print_bold(f"Mail with ID(s) {', '.join(mail_ids)} deleted.")
+        print_bold(f"Mail with ID(s) {", ".join(mail_ids)} deleted.")
         print_separator()
+
 
 def delete_channel():
     """
@@ -223,8 +250,10 @@ def delete_channel():
     """
     channels = list_channels()
     if channels:
-        channel_ids = input_bold("Enter the channel ID(s) to delete (comma-separated) or 'X' to cancel: ").split(',')
-        if 'X' in [id.strip().upper() for id in channel_ids]:
+        channel_ids = input_bold(
+            "Enter the channel ID(s) to delete (comma-separated) or 'X' to cancel: "
+        ).split(",")
+        if "X" in [id.strip().upper() for id in channel_ids]:
             print_bold("Deletion cancelled.")
             print_separator()
             return
@@ -233,8 +262,9 @@ def delete_channel():
         for channel_id in channel_ids:
             c.execute("DELETE FROM channels WHERE id = ?", (channel_id.strip(),))
         conn.commit()
-        print_bold(f"Channel(s) with ID(s) {', '.join(channel_ids)} deleted.")
+        print_bold(f"Channel(s) with ID(s) {", ".join(channel_ids)} deleted.")
         print_separator()
+
 
 def display_menu():
     """
@@ -258,6 +288,7 @@ def display_menu():
     print("6. Delete Channels")
     print("7. Exit")
 
+
 def input_bold(prompt):
     """
     Displays a prompt in bold text, waits for user input, and then resets the text formatting.
@@ -272,6 +303,7 @@ def input_bold(prompt):
     response = input(prompt)
     print("\033[0m")  # ANSI escape code to reset text
     return response
+
 
 def main():
     """
@@ -293,29 +325,30 @@ def main():
 
     Prompts the user for input and handles invalid choices by displaying an error message.
     """
-    display_banner(config['service_name'])
+    display_banner(config["service_name"])
     initialize_database()
     while True:
         display_menu()
         choice = input_bold("Enter your choice: ")
         clear_screen()
-        if choice == '1':
+        if choice == "1":
             list_bulletins()
-        elif choice == '2':
+        elif choice == "2":
             list_mail()
-        elif choice == '3':
+        elif choice == "3":
             list_channels()
-        elif choice == '4':
+        elif choice == "4":
             delete_bulletin()
-        elif choice == '5':
+        elif choice == "5":
             delete_mail()
-        elif choice == '6':
+        elif choice == "6":
             delete_channel()
-        elif choice == '7':
+        elif choice == "7":
             break
         else:
             print_bold("Invalid choice. Please try again.")
             print_separator()
+
 
 if __name__ == "__main__":
     main()
