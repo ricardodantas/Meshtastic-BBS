@@ -21,7 +21,7 @@ This is a fork from the [TC²-BBS](https://github.com/TheCommsChannel/Meshtastic
 1. Run the following command in you terminal:
 
  ```bash
-curl -fsSL https://raw.githubusercontent.com/ricardodantas/Meshtastic-BBS/development/scripts/setup.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ricardodantas/Meshtastic-BBS/main/scripts/setup.sh | bash
 ```
 
 2. Set up the configuration in `config.ini`:
@@ -281,16 +281,13 @@ Make selections by sending messages based on the letter or number in brackets - 
 
 A video of it in use is available on [The Comms Channel](https://www.youtube.com/watch?v=d6LhY4HoimU).
 
-
 ## Sponsor
 
 Help to maintain this project and become a sponsor on [Github Sponsors](https://github.com/sponsors/ricardodantas), [Ko-fi](https://ko-fi.com/ricardodantas), or [Buy Me A Coffee](https://www.buymeacoffee.com/ricardodantas)!
 
-
 ## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md).
-
 
 ## Thanks
 
