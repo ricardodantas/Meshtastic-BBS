@@ -7,7 +7,6 @@ This is a fork from the [TC²-BBS](https://github.com/TheCommsChannel/Meshtastic
 ## Table of Contents
 
 - [Automatic setup (recommended)](#automatic-setup-recommended)
-- [Configuration](#configuration)
 - [Manual setup](#manual-setup)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -143,6 +142,9 @@ curl -fsSL https://raw.githubusercontent.com/ricardodantas/Meshtastic-BBS/develo
    Example Config:
 
    ```ini
+   [service]
+   name = "Meshtastic BBS"
+
    [interface]
    type = serial
    # port = /dev/ttyUSB0
@@ -165,7 +167,7 @@ Be sure you've followed the Python virtual environment steps above and activated
 ## Command line arguments
 
 ```
-$ python server.py --help
+$ poetry run python server.py --help
 
 usage: server.py [-h] [--config CONFIG] [--interface-type {serial,tcp}] [--port PORT] [--host HOST] [--mqtt-topic MQTT_TOPIC]
 
@@ -274,6 +276,8 @@ You interact with the BBS by sending direct messages to the node that's connecte
 Make selections by sending messages based on the letter or number in brackets - Send M for [M]ail Menu for example.
 
 A video of it in use is available on [The Comms Channel](https://www.youtube.com/watch?v=d6LhY4HoimU).
+
+## Contributing
 
 ## Sponsor
 
