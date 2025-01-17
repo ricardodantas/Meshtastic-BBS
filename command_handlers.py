@@ -1,9 +1,13 @@
+"""
+Command handlers utilities.
+"""
 import configparser
 import logging
 import random
 import time
+from typing import List
 
-from meshtastic import BROADCAST_NUM
+from meshtastic import BROADCAST_NUM # type: ignore
 
 from db_operations import (
     add_bulletin, add_mail, delete_mail,
@@ -26,7 +30,17 @@ bbs_menu_items = config['menu']['bbs_menu_items'].split(',')
 utilities_menu_items = config['menu']['utilities_menu_items'].split(',')
 service_name = config['service']['name']
 
-def build_menu(items, menu_name):
+def build_menu(items: List[str], menu_name: str):
+    """
+    Builds a menu string based on the provided items and menu name.
+
+    Args:
+        items (list of str): A list of single-character strings representing menu options.
+        menu_name (str): The name of the menu to be displayed at the top.
+
+    Returns:
+        str: A formatted menu string with each item on a new line.
+    """
     menu_str = f"{menu_name}\n"
     for item in items:
         if item.strip() == 'Q':
@@ -52,7 +66,19 @@ def build_menu(items, menu_name):
     return menu_str
 
 
-def handle_help_command(sender_id, interface, menu_name=None):
+def handle_help_command(sender_id: int | str, interface, menu_name=None):
+    """
+    Handles the help command by updating the user state and building the appropriate menu response.
+
+    Parameters:
+    sender_id (int|str): The ID of the sender.
+    interface (object): The interface through which the command was received.
+    menu_name (str, optional): The name of the menu to display. Defaults to None.
+
+    Returns:
+    None
+    """
+    response = "Nothing to reply"
     if menu_name:
         update_user_state(sender_id, {'command': 'MENU', 'menu': menu_name, 'step': 1})
         if menu_name == 'bbs':
@@ -65,7 +91,17 @@ def handle_help_command(sender_id, interface, menu_name=None):
         response = build_menu(main_menu_items, f"{service_name} (✉️:{len(mail)})")
     send_message(response, sender_id, interface)
 
-def get_node_name(node_id, interface):
+def get_node_name(node_id: str | int, interface):
+    """
+    Retrieve the long name of a node given its ID.
+
+    Args:
+        node_id (str| int): The unique identifier of the node.
+        interface (object): The interface object that contains node information.
+
+    Returns:
+        str: The long name of the node if available, otherwise a default name in the format "Node {node_id}".
+    """
     node_info = interface.nodes.get(node_id)
     if node_info:
         return node_info['user']['longName']
@@ -73,6 +109,16 @@ def get_node_name(node_id, interface):
 
 
 def handle_mail_command(sender_id, interface):
+    """
+    Handles the mail command by sending a mail menu to the user and updating the user's state.
+
+    Parameters:
+    sender_id (str): The ID of the sender who issued the mail command.
+    interface (object): The interface object used to send messages and interact with the user.
+
+    Returns:
+    None
+    """
     response = "Mail Menu\nWhat would you like to do with mail?\n[R]ead  [S]end E[X]IT"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'MAIL', 'step': 1})
@@ -80,25 +126,78 @@ def handle_mail_command(sender_id, interface):
 
 
 def handle_bulletin_command(sender_id, interface):
-    response = f"Bulletin Menu\nWhich board would you like to enter?\n[G]eneral  [I]nfo  [N]ews  [U]rgent"
+    """
+    Handles the bulletin command by sending a bulletin menu message to the user and updating the user's state.
+
+    Args:
+        sender_id (str): The ID of the sender who issued the command.
+        interface (object): The interface object used to send messages and interact with the user.
+
+    Returns:
+        None
+    """
+    response = "Bulletin Menu\nWhich board would you like to enter?\n[G]eneral  [I]nfo  [N]ews  [U]rgent"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'BULLETIN_MENU', 'step': 1})
 
 
 def handle_exit_command(sender_id, interface):
+    """
+    Handles the 'exit' command from a user.
+
+    This function sends a message to the user indicating how to get help and updates the user's state to None.
+
+    Args:
+        sender_id (str): The ID of the user sending the command.
+        interface (object): The interface through which the message is sent.
+
+    Returns:
+        None
+    """
     send_message("Type 'HELP' for a list of commands.", sender_id, interface)
     update_user_state(sender_id, None)
 
 
 def handle_stats_command(sender_id, interface):
+    """
+    Handles the 'stats' command from a user.
+
+    This function sends a response message to the user with a menu of stats options
+    and updates the user's state to indicate that they are in the 'STATS' command flow.
+
+    Args:
+        sender_id (str): The ID of the user who sent the command.
+        interface (object): The interface through which the message is sent.
+
+    Returns:
+        None
+    """
     response = "Stats Menu\nWhat stats would you like to view?\n[N]odes  [H]ardware  [R]oles  E[X]IT"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'STATS', 'step': 1})
 
 
 def handle_fortune_command(sender_id, interface):
+    """
+    Handle the fortune command by sending a random fortune message to the sender.
+
+    This function reads fortunes from a file named 'fortunes.txt', selects a random fortune,
+    and sends it to the specified sender through the given interface. If the file is empty
+    or an error occurs, an appropriate error message is sent instead.
+
+    Args:
+        sender_id (str): The ID of the sender to whom the fortune message will be sent.
+        interface (object): The interface used to send the message.
+
+    Raises:
+        FileNotFoundError: If the 'fortunes.txt' file does not exist.
+        IOError: If there is an error reading the 'fortunes.txt' file.
+        ValueError: If there is an error processing the fortune data.
+        KeyError: If there is an error processing the fortune data.
+        TypeError: If there is an error processing the fortune data.
+    """
     try:
-        with open('fortunes.txt', 'r') as file:
+        with open('fortunes.txt', 'r', encoding='utf-8') as file:
             fortunes = file.readlines()
         if not fortunes:
             send_message("No fortunes available.", sender_id, interface)
@@ -106,11 +205,29 @@ def handle_fortune_command(sender_id, interface):
         fortune = random.choice(fortunes).strip()
         decorated_fortune = f"{fortune}"
         send_message(decorated_fortune, sender_id, interface)
-    except Exception as e:
+    except (ValueError, KeyError, TypeError) as e:
         send_message(f"Error generating fortune: {e}", sender_id, interface)
 
 
 def handle_stats_steps(sender_id, message, step, interface):
+    """
+    Handles the different steps of the stats command based on the user's input message.
+
+    Args:
+        sender_id (str): The ID of the sender.
+        message (str): The message sent by the user.
+        step (int): The current step in the stats command process.
+        interface (object): The interface object containing nodes and other relevant data.
+
+    Returns:
+        None
+
+    The function processes the user's message and performs different actions based on the step and the content of the message:
+    - If the message is 'x', it calls the help command handler.
+    - If the message is 'n', it calculates and sends the total number of nodes seen in different timeframes.
+    - If the message is 'h', it calculates and sends the count of different hardware models.
+    - If the message is 'r', it calculates and sends the count of different roles.
+    """
     message = message.lower().strip()
     if len(message) == 2 and message[1] == 'x':
         message = message[0]
@@ -160,6 +277,27 @@ def handle_stats_steps(sender_id, message, step, interface):
 
 
 def handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes):
+    """
+    Handles the bulletin board steps for a user.
+
+    Parameters:
+    sender_id (str): The ID of the sender.
+    message (str): The message sent by the user.
+    step (int): The current step in the bulletin board process.
+    state (dict): The current state of the user.
+    interface (object): The interface object for sending and receiving messages.
+    bbs_nodes (list): The list of bulletin board system nodes.
+
+    Steps:
+    1. Select a bulletin board.
+    2. Choose to read or post a bulletin.
+    3. Read a selected bulletin.
+    4. Enter the subject of a new bulletin.
+    5. Enter the content of a new bulletin.
+
+    Returns:
+    None
+    """
     boards = {0: "General", 1: "Info", 2: "News", 3: "Urgent"}
     if step == 1:
         if message.lower() == 'e':
@@ -187,7 +325,7 @@ def handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes):
             if board_name.lower() == 'urgent':
                 node_id = get_node_id_from_num(sender_id, interface)
                 allowed_nodes = interface.allowed_nodes
-                logging.info(f"Checking permissions for node_id: {node_id} with allowed_nodes: {allowed_nodes}")  # Debug statement
+                logging.info("Checking permissions for node_id: %s with allowed_nodes: %s", node_id, allowed_nodes)  # Debug statement
                 if allowed_nodes and node_id not in allowed_nodes:
                     send_message("You don't have permission to post to this board.", sender_id, interface)
                     handle_bb_steps(sender_id, 'e', 1, state, interface, bbs_nodes)
@@ -229,6 +367,30 @@ def handle_bb_steps(sender_id, message, step, state, interface, bbs_nodes):
 
 
 def handle_mail_steps(sender_id, message, step, state, interface, bbs_nodes):
+    """
+    Handles the steps for the mail command in a multi-step process.
+
+    Parameters:
+    sender_id (str): The ID of the sender.
+    message (str): The message content sent by the user.
+    step (int): The current step in the mail handling process.
+    state (dict): The current state of the user.
+    interface (object): The interface object for communication.
+    bbs_nodes (list): List of BBS nodes.
+
+    Steps:
+    1. Initial step where the user chooses to read, send, or exit mail.
+    2. User selects a mail to read.
+    3. User provides the short name of the node to send a message to.
+    4. User decides to keep, delete, or reply to a message.
+    5. User provides the subject of the message.
+    6. User selects a specific node if multiple nodes match the short name.
+    7. User writes the content of the message and sends it.
+    8. User confirms if they want to perform another mail command.
+
+    Returns:
+    None
+    """
     message = message.strip()
     if len(message) == 2 and message[1] == 'x':
         message = message[0]
@@ -261,7 +423,7 @@ def handle_mail_steps(sender_id, message, step, state, interface, bbs_nodes):
             send_message("What would you like to do with this message?\n[K]eep  [D]elete  [R]eply", sender_id, interface)
             update_user_state(sender_id, {'command': 'MAIL', 'step': 4, 'mail_id': mail_id, 'unique_id': unique_id, 'sender': sender, 'subject': subject, 'content': content})
         except TypeError:
-            logging.info(f"Node {sender_id} tried to access non-existent message")
+            logging.info("Node %s tried to access non-existent message", sender_id)
             send_message("Mail not found", sender_id, interface)
             update_user_state(sender_id, None)
 
@@ -342,6 +504,16 @@ def handle_mail_steps(sender_id, message, step, state, interface, bbs_nodes):
 
 
 def handle_wall_of_shame_command(sender_id, interface):
+    """
+    Handles the "wall of shame" command which lists devices with battery levels below 20%.
+
+    Args:
+        sender_id (str): The ID of the sender issuing the command.
+        interface (object): The interface object containing nodes and their metrics.
+
+    Returns:
+        None: Sends a message with the list of devices with low battery levels.
+    """
     response = "Devices with battery levels below 20%:\n"
     for node_id, node in interface.nodes.items():
         metrics = node.get('deviceMetrics', {})
@@ -355,12 +527,42 @@ def handle_wall_of_shame_command(sender_id, interface):
 
 
 def handle_channel_directory_command(sender_id, interface):
+    """
+    Handles the channel directory command by sending a response message to the user
+    and updating the user's state.
+
+    Args:
+        sender_id (str): The ID of the sender/user who issued the command.
+        interface (object): The interface object used to send messages and interact with the user.
+
+    Returns:
+        None
+    """
     response = "CHANNEL DIRECTORY\nWhat would you like to do?\n[V]iew  [P]ost  E[X]IT"
     send_message(response, sender_id, interface)
     update_user_state(sender_id, {'command': 'CHANNEL_DIRECTORY', 'step': 1})
 
 
 def handle_channel_directory_steps(sender_id, message, step, state, interface):
+    """
+    Handles the steps for the channel directory command based on the current step and user input.
+
+    Parameters:
+    sender_id (str): The ID of the sender.
+    message (str): The message sent by the user.
+    step (int): The current step in the channel directory process.
+    state (dict): The current state of the user.
+    interface (object): The interface to send messages and interact with the user.
+
+    Steps:
+    1. Initial step where the user can choose to view channels ('v'), add a channel ('p'), or get help ('x').
+    2. User selects a channel to view from the list of available channels.
+    3. User provides a name for the new channel to be added to the directory.
+    4. User provides the URL or PSK for the new channel, which is then added to the directory.
+
+    Returns:
+    None
+    """
     message = message.strip()
     if len(message) == 2 and message[1] == 'x':
         message = message[0]
@@ -406,6 +608,35 @@ def handle_channel_directory_steps(sender_id, message, step, state, interface):
 
 
 def handle_send_mail_command(sender_id, message, interface, bbs_nodes):
+    """
+    Handles the 'send mail' command by parsing the message, validating the recipient,
+    and sending the mail to the specified recipient.
+
+    Args:
+        sender_id (int): The ID of the sender node.
+        message (str): The message containing the mail command and its parameters.
+        interface (object): The interface object used for communication.
+        bbs_nodes (list): The list of BBS nodes.
+
+    Returns:
+        None
+
+    Raises:
+        configparser.Error: If there is an error in the configuration.
+        IOError: If there is an I/O error.
+
+    The expected format of the message is:
+        "SM,,{short_name},,{subject},,{message}"
+
+    The function performs the following steps:
+        1. Splits the message into parts.
+        2. Validates the number of parts.
+        3. Retrieves the recipient node information based on the short name.
+        4. Validates the recipient node.
+        5. Sends the mail to the recipient.
+        6. Notifies the recipient about the new mail.
+        7. Handles any errors that occur during the process.
+    """
     try:
         parts = message.split(",,", 3)
         if len(parts) != 4:
@@ -433,12 +664,28 @@ def handle_send_mail_command(sender_id, message, interface, bbs_nodes):
         notification_message = f"You have a new mail message from {sender_short_name}. Check your mailbox by responding to this message with CM."
         send_message(notification_message, recipient_id, interface)
 
-    except Exception as e:
-        logging.error(f"Error processing send mail command: {e}")
+    except (configparser.Error, IOError) as e:
+        logging.error("Error processing send mail command: %s", e)
         send_message("Error processing send mail command.", sender_id, interface)
 
 
 def handle_check_mail_command(sender_id, interface):
+    """
+    Handles the 'check mail' command for a given sender.
+
+    This function retrieves the mail for the sender, formats a response message
+    listing the available messages, and sends it back to the sender. If there are
+    no new messages, it informs the sender accordingly. It also updates the user's
+    state to indicate that they are in the process of checking their mail.
+
+    Args:
+        sender_id (int): The ID of the sender requesting to check their mail.
+        interface (object): The interface object used to interact with the messaging system.
+
+    Raises:
+        Exception: If an error occurs while processing the command, it logs the error
+                   and sends an error message to the sender.
+    """
     try:
         sender_node_id = get_node_id_from_num(sender_id, interface)
         mail = get_mail(sender_node_id)
@@ -454,12 +701,29 @@ def handle_check_mail_command(sender_id, interface):
 
         update_user_state(sender_id, {'command': 'CHECK_MAIL', 'step': 1, 'mail': mail})
 
-    except Exception as e:
-        logging.error(f"Error processing check mail command: {e}")
+    except (ValueError, KeyError, TypeError) as e:
+        logging.error("Error processing check mail command: %s", e)
         send_message("Error processing check mail command.", sender_id, interface)
 
 
 def handle_read_mail_command(sender_id, message, state, interface):
+    """
+    Handles the 'read mail' command from a user.
+
+    This function retrieves and displays a specific mail message based on the user's input.
+    It validates the message number, fetches the mail content, and sends it back to the user.
+    It also updates the user's state to prompt for further actions on the mail.
+
+    Args:
+        sender_id (str): The ID of the user who sent the command.
+        message (str): The message containing the mail number to be read.
+        state (dict): The current state of the user, including the list of mails.
+        interface (object): The interface used to send messages back to the user.
+
+    Raises:
+        ValueError: If the message number is not a valid integer.
+        Exception: If any other error occurs during the processing of the command.
+    """
     try:
         mail = state.get('mail', [])
         message_number = int(message) - 1
@@ -478,12 +742,28 @@ def handle_read_mail_command(sender_id, message, state, interface):
 
     except ValueError:
         send_message("Invalid input. Please enter a valid message number.", sender_id, interface)
-    except Exception as e:
-        logging.error(f"Error processing read mail command: {e}")
+    except (KeyError, TypeError) as e:
+        logging.error("Error processing read mail command: %s", e)
         send_message("Error processing read mail command.", sender_id, interface)
 
 
 def handle_delete_mail_confirmation(sender_id, message, state, interface, bbs_nodes):
+    """
+    Handles the confirmation for deleting a mail message.
+
+    Parameters:
+    sender_id (str): The ID of the sender.
+    message (str): The message containing the user's choice.
+    state (dict): The current state of the user.
+    interface (object): The interface object for communication.
+    bbs_nodes (list): The list of BBS nodes.
+
+    Returns:
+    None
+
+    The function processes the user's choice to either delete the mail, reply to it, or keep it in the inbox.
+    It updates the user state and sends appropriate messages based on the user's choice.
+    """
     try:
         choice = message.lower().strip()
         if len(choice) == 2 and choice[1] == 'x':
@@ -503,13 +783,30 @@ def handle_delete_mail_confirmation(sender_id, message, state, interface, bbs_no
             send_message("The message has been kept in your inbox.✉️", sender_id, interface)
             update_user_state(sender_id, None)
 
-    except Exception as e:
-        logging.error(f"Error processing delete mail confirmation: {e}")
+    except (ValueError, KeyError, TypeError) as e:
+        logging.error("Error processing delete mail confirmation: %s", e)
         send_message("Error processing delete mail confirmation.", sender_id, interface)
 
 
 
 def handle_post_bulletin_command(sender_id, message, interface, bbs_nodes):
+    """
+    Handles the 'Post Bulletin' command by parsing the message, creating a bulletin, and sending appropriate responses.
+
+    Args:
+        sender_id (int): The ID of the sender.
+        message (str): The message containing the bulletin details.
+        interface (object): The interface used for communication.
+        bbs_nodes (list): The list of bulletin board system nodes.
+
+    Raises:
+        Exception: If there is an error processing the command.
+
+    The expected message format is:
+        PB,,{board_name},,{subject},,{content}
+
+    If the board name is "urgent", a broadcast notification is sent to all users.
+    """
     try:
         parts = message.split(",,", 3)
         if len(parts) != 4:
@@ -526,12 +823,32 @@ def handle_post_bulletin_command(sender_id, message, interface, bbs_nodes):
             notification_message = f"💥NEW URGENT BULLETIN\nFrom: {sender_short_name}\nTitle: {subject}"
             send_message(notification_message, BROADCAST_NUM, interface)
 
-    except Exception as e:
-        logging.error(f"Error processing post bulletin command: {e}")
+    except (ValueError, KeyError, TypeError) as e:
+        logging.error("Error processing post bulletin command: %s", e)
         send_message("Error processing post bulletin command.", sender_id, interface)
 
 
 def handle_check_bulletin_command(sender_id, message, interface):
+    """
+    Handles the "Check Bulletin" command from a user.
+
+    This function processes a message to check bulletins on a specified board.
+    It validates the message format, retrieves the bulletins from the specified board,
+    and sends a response back to the user with the list of bulletins or an error message if applicable.
+
+    Args:
+        sender_id (str): The ID of the user who sent the command.
+        message (str): The message containing the command and board name.
+        interface (object): The interface object used to send messages back to the user.
+
+    Raises:
+        ValueError: If there is an error in processing the command.
+        KeyError: If there is an error in processing the command.
+        TypeError: If there is an error in processing the command.
+
+    Returns:
+        None
+    """
     try:
         # Split the message only once
         parts = message.split(",,", 1)
@@ -556,11 +873,31 @@ def handle_check_bulletin_command(sender_id, message, interface):
 
         update_user_state(sender_id, {'command': 'CHECK_BULLETIN', 'step': 1, 'board_name': board_name, 'bulletins': bulletins})
 
-    except Exception as e:
-        logging.error(f"Error processing check bulletin command: {e}")
+    except (ValueError, KeyError, TypeError) as e:
+        logging.error("Error processing check bulletin command: %s", e)
         send_message("Error processing check bulletin command.", sender_id, interface)
 
 def handle_read_bulletin_command(sender_id, message, state, interface):
+    """
+    Handles the command to read a bulletin.
+
+    This function processes a command to read a specific bulletin from a list of bulletins
+    stored in the state. It validates the bulletin number provided in the message, retrieves
+    the bulletin content, and sends it back to the sender.
+
+    Args:
+        sender_id (str): The ID of the sender who issued the command.
+        message (str): The message containing the bulletin number to read.
+        state (dict): The current state containing the list of bulletins.
+        interface (object): The interface used to send messages back to the sender.
+
+    Raises:
+        ValueError: If the message cannot be converted to an integer.
+        Exception: For any other errors that occur during processing.
+
+    Returns:
+        None
+    """
     try:
         bulletins = state.get('bulletins', [])
         message_number = int(message) - 1
@@ -578,12 +915,32 @@ def handle_read_bulletin_command(sender_id, message, state, interface):
 
     except ValueError:
         send_message("Invalid input. Please enter a valid bulletin number.", sender_id, interface)
-    except Exception as e:
-        logging.error(f"Error processing read bulletin command: {e}")
+    except (KeyError, TypeError) as e:
+        logging.error("Error processing read bulletin command: %s", e)
         send_message("Error processing read bulletin command.", sender_id, interface)
 
 
 def handle_post_channel_command(sender_id, message, interface):
+    """
+    Handles the 'post channel' command by parsing the message and adding a new channel to the directory.
+
+    Args:
+        sender_id (str): The ID of the sender of the command.
+        message (str): The message containing the command and channel details.
+        interface (object): The interface object that provides access to BBS nodes and messaging functions.
+
+    Raises:
+        ValueError: If there is an issue with the values provided in the message.
+        KeyError: If there is a missing key in the provided data.
+        TypeError: If there is a type mismatch in the provided data.
+
+    The expected format of the message is:
+        "CHP,,{channel_name},,{channel_url}"
+
+    If the message format is incorrect, a help message is sent back to the sender.
+    If the channel is successfully added, a confirmation message is sent back to the sender.
+    If an error occurs during processing, an error message is logged and sent back to the sender.
+    """
     try:
         parts = message.split("|", 3)
         if len(parts) != 3:
@@ -595,12 +952,28 @@ def handle_post_channel_command(sender_id, message, interface):
         add_channel(channel_name, channel_url, bbs_nodes, interface)
         send_message(f"Channel '{channel_name}' has been added to the directory.", sender_id, interface)
 
-    except Exception as e:
-        logging.error(f"Error processing post channel command: {e}")
+    except (ValueError, KeyError, TypeError) as e:
+        logging.error("Error processing post channel command: %s", e)
         send_message("Error processing post channel command.", sender_id, interface)
 
 
 def handle_check_channel_command(sender_id, interface):
+    """
+    Handles the 'check channel' command by retrieving available channels and prompting the user to select one.
+
+    Args:
+        sender_id (str): The ID of the user who sent the command.
+        interface (object): The interface through which messages are sent and received.
+
+    Raises:
+        Exception: If there is an error processing the command.
+
+    The function performs the following steps:
+    1. Retrieves the list of available channels.
+    2. Sends a message to the user with the list of channels.
+    3. Updates the user's state to indicate that they are in the process of checking channels.
+    4. Logs and sends an error message if an exception occurs.
+    """
     try:
         channels = get_channels()
         if not channels:
@@ -616,11 +989,31 @@ def handle_check_channel_command(sender_id, interface):
         update_user_state(sender_id, {'command': 'CHECK_CHANNEL', 'step': 1, 'channels': channels})
 
     except Exception as e:
-        logging.error(f"Error processing check channel command: {e}")
+        logging.error("Error processing check channel command: %s", e)
         send_message("Error processing check channel command.", sender_id, interface)
 
 
 def handle_read_channel_command(sender_id, message, state, interface):
+    """
+    Handles the command to read a channel's information based on the provided message.
+
+    Args:
+        sender_id (str): The ID of the sender who issued the command.
+        message (str): The message containing the channel number to read.
+        state (dict): The current state containing channel information.
+        interface (object): The interface used to send messages back to the sender.
+
+    Returns:
+        None
+
+    Raises:
+        ValueError: If the message cannot be converted to an integer.
+        KeyError: If the 'channels' key is not found in the state dictionary.
+        TypeError: If the state is not a dictionary or channels is not a list.
+
+    Logs:
+        Logs errors for ValueError, KeyError, and TypeError during processing.
+    """
     try:
         channels = state.get('channels', [])
         message_number = int(message) - 1
@@ -635,14 +1028,33 @@ def handle_read_channel_command(sender_id, message, state, interface):
 
         update_user_state(sender_id, None)
 
-    except ValueError:
+    except ValueError as e:
+        logging.error("ValueError processing read channel command: %s", e)
         send_message("Invalid input. Please enter a valid channel number.", sender_id, interface)
-    except Exception as e:
-        logging.error(f"Error processing read channel command: {e}")
+    except KeyError as e:
+        logging.error("KeyError processing read channel command: %s", e)
+        send_message("Error processing read channel command.", sender_id, interface)
+    except TypeError as e:
+        logging.error("TypeError processing read channel command: %s", e)
         send_message("Error processing read channel command.", sender_id, interface)
 
 
 def handle_list_channels_command(sender_id, interface):
+    """
+    Handles the command to list available channels.
+
+    This function retrieves the list of available channels and sends a message
+    to the sender with the list. If no channels are available, it notifies the
+    sender. It also updates the user's state to indicate that the list channels
+    command is in progress.
+
+    Args:
+        sender_id (str): The ID of the sender who issued the command.
+        interface (object): The interface object used to send messages.
+
+    Raises:
+        Exception: If an error occurs while processing the command.
+    """
     try:
         channels = get_channels()
         if not channels:
@@ -657,12 +1069,23 @@ def handle_list_channels_command(sender_id, interface):
 
         update_user_state(sender_id, {'command': 'LIST_CHANNELS', 'step': 1, 'channels': channels})
 
-    except Exception as e:
-        logging.error(f"Error processing list channels command: {e}")
+    except (configparser.Error, IOError) as e:
+        logging.error("Error processing list channels command: %s", e)
         send_message("Error processing list channels command.", sender_id, interface)
 
 
 def handle_quick_help_command(sender_id, interface):
+    """
+    Handles the quick help command by sending a predefined response message
+    containing a list of available quick commands and their usage information.
+
+    Args:
+        sender_id (str): The ID of the sender requesting the quick help.
+        interface (object): The interface through which the message will be sent.
+
+    Returns:
+        None
+    """
     response = ("QUICK COMMANDS\nSend command below for usage info:\nSM,, - Send "
                 "Mail\nCM - Check Mail\nPB,, - Post Bulletin\nCB,, - Check Bulletins\n")
     send_message(response, sender_id, interface)
