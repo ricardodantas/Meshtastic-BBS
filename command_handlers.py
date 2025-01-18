@@ -1018,7 +1018,7 @@ def handle_delete_mail_confirmation(sender_id, message, state, interface, bbs_no
                     "command": "MAIL",
                     "step": 7,
                     "reply_to_mail_id": state["mail_id"],
-                    "subject": f"Re: {state["subject"]}",
+                    "subject": f"Re: {state['subject']}",
                     "content": "",
                 },
             )
