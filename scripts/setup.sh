@@ -5,40 +5,6 @@ git clone https://github.com/ricardodantas/meshtastic-bbs.git
 
 cd meshtastic-bbs || exit
 
-# Check if pyenv is already installed
-if command -v pyenv >/dev/null 2>&1; then
-    echo "pyenv is already installed."
-else
-    # Determine the operating system and install pyenv accordingly
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        curl -fsSL https://pyenv.run | bash
-
-        echo "Detected Linux OS. Installing pyenv..."
-        echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-        echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-        echo 'eval "$(pyenv init - bash)"' >> ~/.bashrc
-
-        echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
-        echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
-        echo 'eval "$(pyenv init - bash)"' >> ~/.profile
-
-        exec "$SHELL"
-
-        pyenv install 3.12
-        pyenv local 3.12
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "Detected macOS. Installing pyenv..."
-        brew update
-        brew install pyenv
-        pyenv install 3.12
-        pyenv local 3.12
-    else
-        echo "Unsupported OS: $OSTYPE"
-        exit 1
-    fi
-fi
-
-
 # Check if poetry is already installed
 if command -v poetry >/dev/null 2>&1; then
     echo "poetry is already installed."

@@ -10,15 +10,24 @@ This is a fork from the [TC²-BBS](https://github.com/TheCommsChannel/Meshtastic
 
 ## Table of Contents
 
+- [Requirements](#requirements)
 - [Automatic setup (recommended)](#automatic-setup-recommended)
 - [Manual setup](#manual-setup)
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
 
+## Requirements
+
+- python >= 3.11
+- pyenv
+- poetry
+
 ## Automatic setup (recommended)
 
-1. Run the following command in you terminal:
+1. Install `Poetry`. Follow instructions [here](https://python-poetry.org/docs/#installation).
+
+2. Run the following command in you terminal:
 
  ```bash
 curl -fsSL https://raw.githubusercontent.com/ricardodantas/meshtastic-bbs/main/scripts/setup.sh | bash
@@ -65,12 +74,6 @@ curl -fsSL https://raw.githubusercontent.com/ricardodantas/meshtastic-bbs/main/s
    ```
 
 ## Manual Setup
-
-### Requirements
-
-- python 3.12
-- pyenv
-- poetry
 
 ### Update and Install Git
 
