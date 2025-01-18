@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "meshtastic-bbs"
-version = "1.0.4-beta"
+version = "1.0.5-beta"
 description = "This is a BBS system integrated with Meshtastic network. The system allows for message handling, bulletin boards, mail systems, and a channel directory."
 authors = ["ricardodantas"]
 license = "GPL-3.0"
