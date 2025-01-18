@@ -20,7 +20,6 @@ This is a fork from the [TC²-BBS](https://github.com/TheCommsChannel/Meshtastic
 ## Requirements
 
 - python >= 3.11
-- pyenv
 - poetry
 
 ## Automatic setup (recommended)
@@ -93,39 +92,23 @@ curl -fsSL https://raw.githubusercontent.com/ricardodantas/meshtastic-bbs/main/s
    cd meshtastic-bbs
    ```
 
-2. Set up a `Pyenv`
-
-   2.1 Follow instructions [here](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation).
-
-   2.2 Install Python 3.12
-
-   ```sh
-   pyenv install 3.12
-   ```
-
-   2.3 Set your environment
-
-      ```sh
-      pyenv local 3.12
-      ```
-
-3. Set up a `Poetry`
+2. Set up a `Poetry`
 
    Follow instructions [here](https://python-poetry.org/docs/#installation).
 
-4. Install the required packages
+3. Install the required packages
 
    ```sh
    poetry install
    ```
 
-5. Rename `example_config.ini`
+4. Rename `example_config.ini`
 
    ```sh
    mv example_config.ini config.ini
    ```
 
-6. Set up the configuration in `config.ini`:
+5. Set up the configuration in `config.ini`:
 
    You'll need to open up the config.ini file in a text editor and make your changes following the instructions below
 
