@@ -34,26 +34,19 @@ echo "Current user: $CURRENT_USER"
 # Update meshtastic-bbs.service with the current user
 SERVICE_FILE="meshtastic-bbs.service"
 if [ -f "$SERVICE_FILE" ]; then
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i '' "s/User=pi/User=$CURRENT_USER/g" $SERVICE_FILE
-        sed -i '' "s|/home/pi|/home/$CURRENT_USER|g" $SERVICE_FILE
-    else
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         sed -i "s/User=pi/User=$CURRENT_USER/g" $SERVICE_FILE
         sed -i "s|/home/pi|/home/$CURRENT_USER|g" $SERVICE_FILE
-    fi
-    echo "Updated $SERVICE_FILE with the current user."
+        echo "Updated $SERVICE_FILE with the current user."
 
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        if command -v poetry >/dev/null 2>&1; then
-            echo "Enable service using systemctl..."
-            sudo cp meshtastic-bbs.service /etc/systemd/system/
-            sudo systemctl enable meshtastic-bbs.service
+        echo "Enable service using systemctl..."
+        sudo cp meshtastic-bbs.service /etc/systemd/system/
+        sudo systemctl enable meshtastic-bbs.service
 
-            echo "Starting service..."
-            sudo systemctl start meshtastic-bbs.service
-        fi
-    else
-        echo "Skipping the service  file setup on Mac OS"
+        echo "Starting service..."
+        sudo systemctl start meshtastic-bbs.service
+
+        git reset --hard
     fi
 fi
 
