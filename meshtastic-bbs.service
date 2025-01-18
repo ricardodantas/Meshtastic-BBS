@@ -6,7 +6,7 @@ After=multi-user.target
 Type=simple
 Restart=always
 RestartSec=20
-User=pi
+User=root
 WorkingDirectory=/home/pi/meshtastic-bbs
 ExecStart=bash /scripts/start.sh
 
