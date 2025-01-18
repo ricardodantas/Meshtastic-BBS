@@ -583,8 +583,8 @@ def handle_mail_steps(sender_id, message, step, state, interface, bbs_nodes):
                 {
                     "command": "MAIL",
                     "step": 7,
-                    "reply_to_mail_id": state["mail_id"],
-                    "subject": f"Re: {state["subject"]}",
+                    "reply_to_mail_id": state['mail_id'],
+                    "subject": f"Re: {state['subject']}",
                     "content": "",
                 },
             )
