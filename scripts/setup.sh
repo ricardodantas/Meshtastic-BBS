@@ -18,7 +18,7 @@ fi
 if [ ! -f config.ini ]; then
     if [ -f example_config.ini ]; then
         echo "Renaming example_config.ini to config.ini..."
-        mv example_config.ini config.ini
+        cp example_config.ini config.ini
     else
         echo "example_config.ini not found in the current directory."
         exit 1
