@@ -8,7 +8,7 @@ Restart=always
 RestartSec=20
 User=pi
 WorkingDirectory=/home/pi/meshtastic-bbs
-ExecStart=./scripts/start.sh
+ExecStart=bash /scripts/start.sh
 
 [Install]
 WantedBy=multi-user.target
