@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Clone the repository
-git clone https://github.com/ricardodantas/Meshtastic-BBS.git
+git clone https://github.com/ricardodantas/meshtastic-bbs.git
 
 cd meshtastic-bbs || exit
 
