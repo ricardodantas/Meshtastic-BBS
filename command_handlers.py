@@ -561,7 +561,7 @@ def handle_mail_steps(sender_id, message, step, state, interface, bbs_nodes):
                 interface,
             )
             for i, node in enumerate(nodes):
-                send_message(f"[{i}] {node["longName"]}", sender_id, interface)
+                send_message(f"[{i}] {node['longName']}", sender_id, interface)
             update_user_state(sender_id, {"command": "MAIL", "step": 6, "nodes": nodes})
 
     elif step == 4:

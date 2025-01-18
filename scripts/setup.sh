@@ -45,6 +45,7 @@ if command -v poetry >/dev/null 2>&1; then
 else
     # Linux, macOS, Windows (WSL)
     curl -sSL https://install.python-poetry.org | python3 -
+    exec "$SHELL"
 fi
 
 # Check if example_config.ini is available
@@ -83,7 +84,7 @@ if [ -f "$SERVICE_FILE" ]; then
             sudo systemctl enable meshtastic-bbs.service
 
             echo "Starting service..."
-            sudo systemctl enable meshtastic-bbs.service
+            sudo systemctl start meshtastic-bbs.service
         fi
     else
         echo "Skipping the service  file setup on Mac OS"
