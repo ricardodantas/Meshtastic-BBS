@@ -51,6 +51,7 @@ confidence=
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 disable=R,
+        inconsistent-quotes,
         line-too-long,
         abstract-method,
         apply-builtin,
