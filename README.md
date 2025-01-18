@@ -24,9 +24,7 @@ This is a fork from the [TC²-BBS](https://github.com/TheCommsChannel/Meshtastic
 
 ## Automatic setup (recommended)
 
-1. Install `Poetry`. Follow instructions [here](https://python-poetry.org/docs/#installation).
-
-2. Run the following command in you terminal:
+Run the following command in you terminal:
 
  ```bash
 curl -fsSL https://raw.githubusercontent.com/ricardodantas/meshtastic-bbs/main/scripts/setup.sh | bash
