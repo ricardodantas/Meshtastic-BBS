@@ -8,6 +8,4 @@ else
     ./scripts/update.sh
 fi
 
-sudo chmod a+rw /dev/ttyACM0
-
 poetry run python server.py
